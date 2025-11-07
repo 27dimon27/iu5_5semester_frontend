@@ -8,7 +8,6 @@ import { useServices } from '../hooks/useServices';
 import { useBidIcon } from '../hooks/useBidIcon';
 import { CartIcon } from '../components/CartIcon';
 
-// Импортируем локальное фото по умолчанию
 import defaultServiceImage from '../assets/defaultService.png';
 
 export const ServicesPage: React.FC = () => {
