@@ -5,7 +5,7 @@ export const servicesMock: SoftwareService[] = [
     id: 1,
     title: "Проектирование веб-приложения",
     description: "Профессиональная команда разработчиков спроектирует веб-приложение по Вашему техническому заданию!",
-    image: "../assets/defaultService.png",
+    image: "defaultService.png",
     price: 5_000,
     status: true
   },
@@ -13,7 +13,7 @@ export const servicesMock: SoftwareService[] = [
     id: 2,
     title: "Проектирование десктопного приложения",
     description: "Профессиональная команда разработчиков спроектирует десктопное приложение по Вашему техническому заданию!",
-    image: "../assets/defaultService.png",
+    image: "defaultService.png",
     price: 6_000,
     status: true
   },
@@ -21,7 +21,7 @@ export const servicesMock: SoftwareService[] = [
     id: 3,
     title: "Проектирование мобильного приложения",
     description: "Профессиональная команда разработчиков спроектирует мобильное приложение по Вашему техническому заданию!",
-    image: "../assets/defaultService.png",
+    image: "defaultService.png",
     price: 7_000,
     status: true
   },

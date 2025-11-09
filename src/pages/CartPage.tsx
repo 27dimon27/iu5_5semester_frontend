@@ -14,6 +14,9 @@ import { ROUTES, ROUTE_LABELS } from '../routes';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useCart } from '../hooks/useCart';
 import { companiesMock, gradesMock } from '../data/mockData';
+import { IMAGE_BASE_URL } from '../config/api';
+
+import defaultServiceImage from '../assets/defaultService.png';
 
 export const CartPage: React.FC = () => {
   const { 
@@ -26,7 +29,6 @@ export const CartPage: React.FC = () => {
   } = useCart();
 
   const handleCountChange = (serviceId: number, count: number) => {
-    // Разрешаем 0 и положительные числа, отрицательные преобразуем в 0
     const validCount = Math.max(0, count);
     const item = cartItems.find(item => item.softwareService.id === serviceId);
     if (item) {
@@ -111,7 +113,7 @@ export const CartPage: React.FC = () => {
                 <tr key={item.softwareService.id}>
                   <td>
                     <img 
-                      src={`http://localhost:9000/software-images/${item.softwareService.image}`}
+                      src={`${IMAGE_BASE_URL}/software-images/${item.softwareService.image}`}
                       alt={item.softwareService.title}
                       style={{ 
                         width: '50px', 
@@ -120,7 +122,7 @@ export const CartPage: React.FC = () => {
                         borderRadius: '4px'
                       }}
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/50x50?text=No+Img';
+                        (e.target as HTMLImageElement).src = defaultServiceImage;
                       }}
                     />
                   </td>
@@ -198,6 +200,23 @@ export const CartPage: React.FC = () => {
           </Row>
         </Card.Body>
       </Card>
+
+      <style>{`
+        /* Мобильные устройства */
+        @media (max-width: 768px) {
+          .cart-table {
+            font-size: 0.8rem;
+          }
+          .cart-table th,
+          .cart-table td {
+            padding: 0.3rem;
+          }
+          .cart-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+      `}</style>
     </Container>
   );
 };

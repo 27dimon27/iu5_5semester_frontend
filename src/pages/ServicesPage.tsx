@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { ROUTE_LABELS } from '../routes';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -7,15 +7,34 @@ import { useCart } from '../hooks/useCart';
 import { useServices } from '../hooks/useServices';
 import { useBidIcon } from '../hooks/useBidIcon';
 import { CartIcon } from '../components/CartIcon';
-
-import defaultServiceImage from '../assets/defaultService.png';
+import { useImageError } from '../hooks/useImageError';
+import { IMAGE_BASE_URL } from '../config/api';
+import { useAppSelector, useAppDispatch } from '../store';
+import { setSearchTerm, setActiveSearch } from '../store/filterSlice';
 
 export const ServicesPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeSearch, setActiveSearch] = useState('');
+  const dispatch = useAppDispatch();
+  
+  const { searchTerm, activeSearch } = useAppSelector((state) => state.filters);
+  
   const { addToCart, itemCount } = useCart();
   const { services, loading, error } = useServices();
   const { loading: bidIconLoading } = useBidIcon();
+  const { handleImageError } = useImageError();
+
+  const [loadingImages, setLoadingImages] = useState<{ [key: number]: boolean }>({});
+
+  useEffect(() => {
+    console.log('ServicesPage mounted with search:', { searchTerm, activeSearch });
+  }, [searchTerm, activeSearch]);
+
+  const handleImageLoad = (serviceId: number) => {
+    setLoadingImages(prev => ({ ...prev, [serviceId]: false }));
+  };
+
+  const handleImageLoadStart = (serviceId: number) => {
+    setLoadingImages(prev => ({ ...prev, [serviceId]: true }));
+  };
 
   const filteredServices = useMemo(() => {
     if (!activeSearch) return services;
@@ -24,19 +43,23 @@ export const ServicesPage: React.FC = () => {
     );
   }, [activeSearch, services]);
 
+  const handleSearchChange = (value: string) => {
+    dispatch(setSearchTerm(value));
+  };
+
   const handleSearch = () => {
-    setActiveSearch(searchTerm);
+    dispatch(setActiveSearch(searchTerm));
   };
 
   const handleClearSearch = () => {
-    setSearchTerm('');
-    setActiveSearch('');
+    dispatch(setSearchTerm(''));
+    dispatch(setActiveSearch(''));
   };
 
-  // Функция для обработки ошибок загрузки изображения
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.target as HTMLImageElement;
-    target.src = defaultServiceImage;
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   if (loading) {
@@ -44,6 +67,9 @@ export const ServicesPage: React.FC = () => {
       <Container>
         <Breadcrumbs crumbs={[{ label: ROUTE_LABELS.SERVICES }]} />
         <div className="text-center py-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Загрузка...</span>
+          </Spinner>
           <p>Загрузка услуг...</p>
         </div>
       </Container>
@@ -83,12 +109,8 @@ export const ServicesPage: React.FC = () => {
               type="text"
               placeholder="Введите название услуги для поиска..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <Button 
               variant="outline-secondary" 
@@ -109,6 +131,11 @@ export const ServicesPage: React.FC = () => {
             <div className="mt-2">
               <small className="text-muted">
                 Результаты поиска по: "{activeSearch}"
+                {filteredServices.length > 0 && (
+                  <span className="ms-2">
+                    ({filteredServices.length} услуг найдено)
+                  </span>
+                )}
               </small>
             </div>
           )}
@@ -120,11 +147,21 @@ export const ServicesPage: React.FC = () => {
           <Col key={service.id} lg={4} md={6} className="mb-4">
             <Card className="h-100 service-card">
               <div className="service-card-image-container">
-                <Card.Img 
-                  variant="top" 
-                  src={`http://localhost:9000/software-images/${service.image}`}
+                {loadingImages[service.id] && (
+                  <div className="image-loading-spinner">
+                    <Spinner animation="border" size="sm" />
+                  </div>
+                )}
+                <img 
+                  src={`${IMAGE_BASE_URL}/software-images/${service.image}`}
+                  alt={service.title}
                   className="service-card-img"
+                  onLoad={() => handleImageLoad(service.id)}
+                  onLoadStart={() => handleImageLoadStart(service.id)}
                   onError={handleImageError}
+                  style={{ 
+                    display: loadingImages[service.id] ? 'none' : 'block' 
+                  }}
                 />
               </div>
               <Card.Body className="service-card-body">
@@ -134,6 +171,9 @@ export const ServicesPage: React.FC = () => {
                 <Card.Text className="service-card-description">
                   {service.description.slice(0, 100)}...
                 </Card.Text>
+                <div className="service-card-price">
+                  {service.price} руб
+                </div>
                 <div className="service-card-actions">
                   <Link to={`/services/${service.id}`} className="flex-fill">
                     <Button variant="outline-primary" size="sm" className="w-100" style={{
@@ -187,23 +227,32 @@ export const ServicesPage: React.FC = () => {
         }
         
         .service-card-image-container {
-          height: 60%;
-          padding: 5%;
+          height: 200px;
+          padding: 15px;
           display: flex;
           align-items: center;
           justify-content: center;
+          background-color: #f8f9fa;
+          border-radius: 0.375rem 0.375rem 0 0;
+          position: relative;
         }
         
         .service-card-img {
-          height: 100%;
-          width: 100%;
+          max-height: 100%;
+          max-width: 100%;
           object-fit: contain;
           border-radius: 4px;
         }
         
+        .image-loading-spinner {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        
         .service-card-body {
-          height: 40%;
-          padding: 8% 5% 5% 5%;
+          padding: 15px;
           display: flex;
           flex-direction: column;
           gap: 8px;

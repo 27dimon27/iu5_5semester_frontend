@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { Container } from 'react-bootstrap';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import { Navigation } from './components/Navigation';
 import { HomePage } from './pages/HomePage';
 import { ServicesPage } from './pages/ServicesPage';
@@ -10,26 +11,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    // <Router>
-    //   <Navigation />
-    //   <Container fluid className="py-4">
-    //     <Routes>
-    //       <Route path={ROUTES.HOME} element={<HomePage />} />
-    //       <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
-    //       <Route path={ROUTES.SERVICE} element={<ServicePage />} />
-    //       <Route path={ROUTES.CART} element={<CartPage />} />
-    //     </Routes>
-    //   </Container>
-    // </Router>
-    <Router>
-      <Navigation />
-      <Routes>
-        <Route path={ROUTES.HOME} element={<HomePage />} />
-        <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
-        <Route path={ROUTES.SERVICE} element={<ServicePage />} />
-        <Route path={ROUTES.CART} element={<CartPage />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router basename="/iu5_5semester_frontend">
+        <Navigation />
+        <Routes>
+          <Route path={ROUTES.HOME} element={<HomePage />} />
+          <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
+          <Route path={ROUTES.SERVICE} element={<ServicePage />} />
+          <Route path={ROUTES.CART} element={<CartPage />} />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 

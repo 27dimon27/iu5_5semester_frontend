@@ -1,10 +1,14 @@
 import { SoftwareService, CartItem, Bid, BidIcon } from "../types";
+import { API_BASE_URL } from '../config/api';
 
-const API_BASE_URL = "/api";
+const isApiAvailable = () => API_BASE_URL !== null;
 
 export const apiService = {
   // Получение всех услуг
   async getSoftwares(): Promise<SoftwareService[]> {
+    if (!isApiAvailable()) {
+      throw new Error("API not available in production");
+    }
     const response = await fetch(`${API_BASE_URL}/softwares`);
     if (!response.ok) {
       throw new Error("Failed to get services");
@@ -15,6 +19,9 @@ export const apiService = {
 
   // Получение услуги по ID
   async getSoftwareById(id: number): Promise<SoftwareService> {
+    if (!isApiAvailable()) {
+      throw new Error("API not available in production");
+    }
     const response = await fetch(`${API_BASE_URL}/softwares/${id}`);
     if (!response.ok) {
       throw new Error("Failed to get service");
@@ -25,6 +32,9 @@ export const apiService = {
 
   // Получение иконки корзины
   async getBidIcon(): Promise<BidIcon> {
+    if (!isApiAvailable()) {
+      throw new Error("API not available in production");
+    }
     const response = await fetch(`${API_BASE_URL}/software-bids-icon`, {
       method: "GET",
       credentials: "include",

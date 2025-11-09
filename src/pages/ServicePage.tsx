@@ -7,19 +7,15 @@ import { useCart } from '../hooks/useCart';
 import { useService } from '../hooks/useService';
 import { useBidIcon } from '../hooks/useBidIcon';
 import { CartIcon } from '../components/CartIcon';
-
-import defaultServiceImage from '../assets/defaultService.png';
+import { IMAGE_BASE_URL } from '../config/api';
+import { useImageError } from '../hooks/useImageError';
 
 export const ServicePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { addToCart } = useCart();
   const { service, loading, error } = useService(id);
   const { itemCount } = useBidIcon();
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.target as HTMLImageElement;
-    target.src = defaultServiceImage;
-  };
+  const { handleImageError } = useImageError();
 
   const handleAddToCart = () => {
     if (service) {
@@ -27,7 +23,6 @@ export const ServicePage: React.FC = () => {
     }
   };
 
-  // Состояние загрузки
   if (loading) {
     return (
       <Container>
@@ -45,7 +40,6 @@ export const ServicePage: React.FC = () => {
     );
   }
 
-  // Состояние ошибки
   if (error || !service) {
     return (
       <Container>
@@ -91,8 +85,8 @@ export const ServicePage: React.FC = () => {
           <Card className="service-image-card">
             <div className="service-image-container">
               <Card.Img 
-                variant="top" 
-                src={`http://localhost:9000/software-images/${service.image}`}
+                src={`${IMAGE_BASE_URL}/software-images/${service.image}`}
+                alt={service.title}
                 className="service-detail-img"
                 onError={handleImageError}
               />
@@ -155,6 +149,15 @@ export const ServicePage: React.FC = () => {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+          .service-detail-container {
+            flex-direction: column;
+          }
+          .service-image-container {
+            height: 250px;
+          }
         }
       `}</style>
     </Container>
