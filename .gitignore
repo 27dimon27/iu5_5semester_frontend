@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+*.key
+*.pem
+*.crt
+*.csr
+*.pfx
+*.p12
+*.cer
+*.der
+/secrets/
+/certs/
+/ssl/
