@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CartItem, Bid } from '../types';
+import type { CartItem, Bid } from '../types';
 import { companiesMock, gradesMock } from '../data/mockData';
 
 export const useCart = () => {

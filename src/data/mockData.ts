@@ -1,4 +1,4 @@
-import { SoftwareService } from '../types';
+import type { SoftwareService } from '../types';
 
 export const servicesMock: SoftwareService[] = [
   {

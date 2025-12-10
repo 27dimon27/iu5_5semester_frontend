@@ -1,4 +1,4 @@
-import { SoftwareService, CartItem, Bid, BidIcon } from "../types";
+import type { SoftwareService, CartItem, Bid, BidIcon } from "../types";
 import { API_BASE_URL } from '../config/api';
 
 const isApiAvailable = () => API_BASE_URL !== null;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { SoftwareService } from '../types';
+import type { SoftwareService } from '../types';
 import { apiService } from '../services/api';
 import { servicesMock } from '../data/mockData';
 import { environment } from '../config/environment';
