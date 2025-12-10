@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <Provider store={store}>
-      <Router basename="/iu5_5semester_frontend">
+      <Router>
         <Navigation />
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
