@@ -1,7 +1,8 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '../routes';
+import { Container, Row, Col } from 'react-bootstrap';
+// import { Container, Row, Col, Button } from 'react-bootstrap';
+// import { Link } from 'react-router-dom';
+// import { ROUTES } from '../routes';
 
 // Импортируем GIF напрямую
 import mainGif from '../assets/main.gif';
@@ -60,7 +61,7 @@ export const HomePage: React.FC = () => {
             }}>
               Профессиональные услуги по разработке программного обеспечения
             </p>
-            <Link to={ROUTES.SERVICES}>
+            {/* <Link to={ROUTES.SERVICES}>
               <Button 
                 variant="primary" 
                 size="lg"
@@ -76,7 +77,7 @@ export const HomePage: React.FC = () => {
               >
                 Посмотреть услуги
               </Button>
-            </Link>
+            </Link> */}
           </Col>
         </Row>
       </Container>

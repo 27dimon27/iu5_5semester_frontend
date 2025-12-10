@@ -17,7 +17,7 @@ export const useServices = () => {
         
         let servicesData: SoftwareService[];
         
-        if (environment.isProduction) {
+        if (false && environment.isProduction) {
           // В продакшене всегда используем моки
           console.log('Production mode: using mock data');
           servicesData = servicesMock;

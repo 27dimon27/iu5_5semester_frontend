@@ -27,17 +27,17 @@ export default defineConfig({
       }
     })
   ],
-  base: "/iu5_5semester_frontend",
+  base: "./",
   server: {
     port: 3000,
     proxy: {
       '/images': {
-        target: 'http://192.168.1.67:9000', // Замените на ваш IP
+        target: 'http://192.168.0.14:9000', // Замените на ваш IP
         changeOrigin: true,
       },
       
       '/api': {
-        target: 'http://192.168.1.67:8080', // Замените на ваш IP
+        target: 'http://192.168.0.14:8080', // Замените на ваш IP
         changeOrigin: true,
         
         configure: (proxy, _options) => {
